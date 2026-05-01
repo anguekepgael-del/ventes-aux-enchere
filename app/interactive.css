@@ -163,6 +163,115 @@ input {
   background: #fbe9e7;
 }
 
+.operations-section {
+  color: var(--paper);
+  background: #10100f;
+}
+
+.operations-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.ops-panel {
+  display: grid;
+  gap: 14px;
+  min-height: 220px;
+  padding: 22px;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+}
+
+.ops-panel.featured {
+  color: var(--paper);
+  background:
+    linear-gradient(135deg, rgba(217, 143, 34, 0.18), transparent 54%),
+    var(--ink);
+}
+
+.ops-panel.featured .detail-row {
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.ops-panel.featured small {
+  color: rgba(255, 255, 255, 0.66);
+}
+
+.ops-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.ops-list,
+.city-cloud,
+.badge-cloud {
+  display: grid;
+  gap: 10px;
+}
+
+.ops-list span {
+  display: block;
+  padding: 12px;
+  color: var(--ink);
+  background: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.ops-list small {
+  display: block;
+  margin-top: 3px;
+  color: var(--soft, var(--text-muted));
+}
+
+.ops-list.compact span {
+  color: #b3261e;
+  background: #fbe9e7;
+  border-color: #f1c4bf;
+}
+
+.ops-steps {
+  display: grid;
+  gap: 9px;
+  margin: 0;
+  padding-left: 20px;
+  color: var(--soft, var(--text-muted));
+}
+
+.ops-steps li::marker {
+  color: var(--gold);
+  font-weight: 900;
+}
+
+.city-cloud,
+.badge-cloud {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.city-cloud span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 0 11px;
+  color: var(--ink);
+  background: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.alert-surface {
+  border-color: #f1c4bf;
+}
+
 .admin-table-wrap {
   overflow: auto;
 }
@@ -215,7 +324,8 @@ input {
 
 @media (max-width: 1120px) {
   .catalogue-layout,
-  .seller-layout {
+  .seller-layout,
+  .operations-grid {
     grid-template-columns: 1fr;
   }
 
