@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Enchere.cm | Encheres securisees au Cameroun</title>
+    <meta
+      name="description"
+      content="Prototype premium d'une plateforme camerounaise d'encheres en ligne avec caution, verification, paiement securise et back-office."
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="site-header" id="top">
+        <a class="brand" href="#top" aria-label="Enchere.cm accueil">
+          <span class="brand-mark">E</span>
+          <span><strong>Enchere.cm</strong><small>Verified auctions Cameroon</small></span>
+        </a>
+        <nav class="nav-links" aria-label="Navigation principale">
+          <a href="#catalogue">Catalogue</a>
+          <a href="#seller">Vendeur</a>
+          <a href="#buyer">Acheteur</a>
+          <a href="#admin">Admin</a>
+          <a href="#trust">Confiance</a>
+        </nav>
+        <div class="header-actions">
+          <button class="ghost-btn" id="languageToggle" type="button">FR</button>
+          <button class="ghost-btn" data-open-auth type="button">Connexion</button>
+          <a class="primary-btn" href="#seller">Deposer un bien</a>
+        </div>
+      </header>
+
+      <main>
+        <section class="hero-section">
+          <div class="hero-copy">
+            <p class="eyebrow">Plateforme camerounaise d'encheres verifiees</p>
+            <h1>Vendre, acheter et encherir avec une confiance visible.</h1>
+            <p class="hero-text">
+              Enchere.cm combine verification d'identite, inspection des biens,
+              caution avant enchere et paiement bloque avant reversement vendeur.
+            </p>
+            <div class="hero-actions">
+              <a class="primary-btn large" href="#catalogue">Voir les encheres</a>
+              <a class="secondary-btn large" href="#admin">Explorer le back-office</a>
+            </div>
+            <div class="trust-strip" aria-label="Indicateurs de confiance">
+              <span>Paiement securise</span>
+              <span>OTP telephone</span>
+              <span>Support WhatsApp</span>
+            </div>
+          </div>
+          <aside class="hero-panel" aria-label="Enchere active">
+            <div class="live-header"><span class="live-dot"></span><span>Enchere live</span><strong id="heroCountdown">02:18:44</strong></div>
+            <div id="heroAuction"></div>
+            <div class="escrow-module">
+              <div><small>Caution requise</small><strong id="heroDeposit">90 000 FCFA</strong></div>
+              <button class="security-btn" id="heroDepositButton" type="button">Payer caution</button>
+            </div>
+          </aside>
+        </section>
+
+        <section class="metrics-band" aria-label="Statistiques de confiance">
+          <article><strong>2 840+</strong><span>utilisateurs verifies</span></article>
+          <article><strong>96%</strong><span>biens controles avant publication</span></article>
+          <article><strong>5</strong><span>canaux de paiement prioritaires</span></article>
+          <article><strong>8</strong><span>roles d'administration</span></article>
+        </section>
+
+        <section class="section-block" id="catalogue">
+          <div class="section-heading">
+            <div><p class="eyebrow">Catalogue</p><h2>Encheres en cours</h2></div>
+            <div class="filters" id="categoryFilters" aria-label="Filtres categorie"></div>
+          </div>
+          <div class="catalogue-layout">
+            <div class="auction-grid" id="auctionGrid"></div>
+            <aside class="detail-panel" id="auctionDetail"></aside>
+          </div>
+        </section>
+
+        <section class="section-block light" id="trust">
+          <div class="section-heading"><div><p class="eyebrow">Confiance operationnelle</p><h2>Chaque transaction suit un circuit controle.</h2></div></div>
+          <div class="workflow-grid">
+            <article><span>01</span><h3>Verification</h3><p>Identite, telephone OTP, documents vendeur et controle du bien avant publication.</p></article>
+            <article><span>02</span><h3>Caution</h3><p>Depot obligatoire avant enchere pour reduire les faux encherisseurs.</p></article>
+            <article><span>03</span><h3>Sequestre</h3><p>Paiement bloque pendant la validation, livraison ou retrait en point partenaire.</p></article>
+            <article><span>04</span><h3>Reversement</h3><p>Commission deduite, facture generee et paiement vendeur declenche par finance.</p></article>
+          </div>
+        </section>
+
+        <section class="section-block dashboard-band" id="seller">
+          <div class="section-heading"><div><p class="eyebrow">Espace vendeur</p><h2>Depot de bien en plusieurs etapes</h2></div></div>
+          <div class="seller-layout">
+            <div class="wizard" id="sellerWizard"></div>
+            <div class="seller-summary">
+              <h3>Statut vendeur</h3>
+              <div class="status-list">
+                <span><strong>Identite confirmee</strong><small>CNI validee</small></span>
+                <span><strong>Telephone OTP</strong><small>+237 6XX XXX XXX</small></span>
+                <span><strong>Documents</strong><small>2 fichiers valides</small></span>
+                <span><strong>Badge</strong><small>Vendeur verifie</small></span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section-block light" id="buyer">
+          <div class="section-heading"><div><p class="eyebrow">Espace acheteur</p><h2>Suivi des encheres, cautions et messages</h2></div></div>
+          <div class="buyer-grid">
+            <article class="buyer-card"><small>Encheres actives</small><strong id="buyerActiveCount">3</strong><span>dont 1 bientot terminee</span></article>
+            <article class="buyer-card"><small>Cautions bloquees</small><strong id="buyerDepositTotal">115 000 FCFA</strong><span>remboursables selon resultat</span></article>
+            <article class="buyer-card"><small>Messagerie</small><strong>4</strong><span>messages support et vendeur</span></article>
+            <article class="buyer-card alert-card"><small>Litiges</small><strong>1</strong><span>dossier en mediation</span></article>
+          </div>
+        </section>
+
+        <section class="section-block admin-section" id="admin">
+          <div class="section-heading"><div><p class="eyebrow">Back-office</p><h2>Command center administrateur</h2></div></div>
+          <div class="admin-layout">
+            <aside class="admin-rail" aria-label="Roles">
+              <button class="active" type="button">Super admin</button>
+              <button type="button">Verification</button>
+              <button type="button">Finance</button>
+              <button type="button">Support</button>
+              <button type="button">Moderation</button>
+            </aside>
+            <div class="admin-board">
+              <div class="admin-stats">
+                <article><strong>18</strong><span>biens a valider</span></article>
+                <article><strong>7</strong><span>vendeurs en revue</span></article>
+                <article><strong>12.6M</strong><span>FCFA en sequestre</span></article>
+                <article><strong>3</strong><span>signalements critiques</span></article>
+              </div>
+              <div class="admin-table-wrap">
+                <table class="admin-table"><thead><tr><th>Dossier</th><th>Type</th><th>Statut</th><th>Risque</th><th>Action</th></tr></thead><tbody id="adminRows"></tbody></table>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <div><strong>Enchere.cm</strong><span>Douala, Yaounde, Bafoussam, Garoua, Limbe, Kribi</span></div>
+        <nav aria-label="Pages legales"><a href="#top">CGU</a><a href="#top">Confidentialite</a><a href="#top">Biens interdits</a><a href="#top">Litiges</a></nav>
+      </footer>
+    </div>
+
+    <a class="whatsapp-float" href="https://wa.me/237600000000" aria-label="Support WhatsApp">WA<span>Support</span></a>
+
+    <dialog class="auth-dialog" id="authDialog">
+      <form method="dialog" class="auth-card">
+        <button class="close-btn" value="close" aria-label="Fermer">x</button>
+        <p class="eyebrow">Acces securise</p>
+        <h2>Connexion a Enchere.cm</h2>
+        <label>Email<input type="email" value="acheteur@enchere.cm" /></label>
+        <label>Mot de passe<input type="password" value="cameroon-auction" /></label>
+        <label>Code OTP<input type="text" value="482910" /></label>
+        <button class="primary-btn full" value="close">Valider</button>
+      </form>
+    </dialog>
+
+    <script src="./src/marketplace-core.browser.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
