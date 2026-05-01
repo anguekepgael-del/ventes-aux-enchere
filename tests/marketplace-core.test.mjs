@@ -4,9 +4,13 @@ import test from "node:test";
 import {
   calculateBuyerDeposit,
   calculateCommission,
+  calculateSellerPayout,
   canPlaceBid,
   formatXaf,
+  getEscrowDecision,
   getMinimumNextBid,
+  isValidCameroonMobileMoneyPhone,
+  normalizeCameroonPhone,
 } from "../src/marketplace-core.mjs";
 
 test("formats XAF prices with French grouping and FCFA suffix", () => {
@@ -47,4 +51,38 @@ test("calculates buyer deposit with a minimum floor", () => {
 
 test("calculates platform commission from final sale price", () => {
   assert.equal(calculateCommission({ finalPrice: 2500000, rate: 0.075 }), 187500);
+});
+
+test("calculates seller payout after commission", () => {
+  assert.deepEqual(calculateSellerPayout({ finalPrice: 1000000, commissionRate: 0.075 }), {
+    commission: 75000,
+    payout: 925000,
+  });
+});
+
+test("normalizes and validates Cameroon Mobile Money phone numbers", () => {
+  assert.equal(normalizeCameroonPhone("+237 699 000 111"), "237699000111");
+  assert.equal(isValidCameroonMobileMoneyPhone("+237 699 000 111"), true);
+  assert.equal(isValidCameroonMobileMoneyPhone("+237 299 000 111"), false);
+});
+
+test("returns escrow release decision from transaction state", () => {
+  assert.equal(
+    getEscrowDecision({
+      paymentCaptured: true,
+      buyerConfirmed: true,
+      disputeOpen: false,
+      adminApproved: true,
+    }),
+    "releasable",
+  );
+  assert.equal(
+    getEscrowDecision({
+      paymentCaptured: true,
+      buyerConfirmed: true,
+      disputeOpen: true,
+      adminApproved: true,
+    }),
+    "disputed",
+  );
 });
