@@ -5,9 +5,21 @@
   "description": "Prototype premium d'une plateforme camerounaise d'encheres en ligne securisees.",
   "type": "module",
   "scripts": {
-    "dev": "node server.mjs",
-    "start": "node server.mjs",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
     "test": "node tests/marketplace-core.test.mjs",
-    "check": "node --check app.js && node --check src/marketplace-core.browser.js"
+    "check": "next build"
+  },
+  "dependencies": {
+    "next": "^16.1.6",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "typescript": "^5.9.0"
   }
 }
