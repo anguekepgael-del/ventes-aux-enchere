@@ -41,6 +41,50 @@ export function calculateCommission({
   return Math.round(finalPrice * rate);
 }
 
+export function calculateSellerPayout({
+  finalPrice,
+  commissionRate = 0.075,
+}: {
+  finalPrice: number;
+  commissionRate?: number;
+}) {
+  const commission = calculateCommission({ finalPrice, rate: commissionRate });
+  return {
+    commission,
+    payout: Math.max(finalPrice - commission, 0),
+  };
+}
+
+export function normalizeCameroonPhone(phone: string) {
+  return phone.replace(/[\s().-]/g, "").replace(/^00237/, "237").replace(/^\+237/, "237");
+}
+
+export function isValidCameroonMobileMoneyPhone(phone: string) {
+  return /^2376\d{8}$/.test(normalizeCameroonPhone(phone));
+}
+
+export function getEscrowDecision({
+  paymentCaptured,
+  buyerConfirmed,
+  disputeOpen,
+  adminApproved,
+}: {
+  paymentCaptured: boolean;
+  buyerConfirmed: boolean;
+  disputeOpen: boolean;
+  adminApproved: boolean;
+}) {
+  if (disputeOpen) {
+    return "disputed";
+  }
+
+  if (paymentCaptured && buyerConfirmed && adminApproved) {
+    return "releasable";
+  }
+
+  return "hold";
+}
+
 export function canPlaceBid({
   user,
   auction,
