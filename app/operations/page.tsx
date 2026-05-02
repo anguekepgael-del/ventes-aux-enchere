@@ -1,5 +1,5 @@
 import { DetailRow, PageShell, SectionIntro } from "@/src/components/site-chrome";
-import { demoAuctions } from "@/src/lib/demo-data";
+import { demoAuctions, platformImages } from "@/src/lib/demo-data";
 import {
   cameroonCities,
   escrowLifecycle,
@@ -13,6 +13,7 @@ import {
   formatXaf,
   getEscrowDecision,
 } from "@/src/lib/marketplace-core";
+import { mediaStyle } from "@/src/lib/visual-style";
 
 export default function Page() {
   const selectedAuction = demoAuctions[0];
@@ -33,6 +34,12 @@ export default function Page() {
         />
         <div className="operations-grid">
           <article className="ops-panel featured">
+            <div
+              className="ops-media"
+              role="img"
+              aria-label="Controle financier et paiement securise"
+              style={mediaStyle(platformImages.operations)}
+            />
             <div className="ops-panel-header">
               <span className="badge gold">Mobile Money ready</span>
               <strong>Caution en attente</strong>
