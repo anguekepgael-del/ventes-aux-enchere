@@ -45,7 +45,12 @@ export default function HomePage() {
             <span>Enchere live</span>
             <strong>{heroAuction.endsIn}</strong>
           </div>
-          <div className="auction-visual" style={visualStyle(heroAuction.bg)}>
+          <div
+            className="auction-visual hero-auction-image"
+            role="img"
+            aria-label={heroAuction.imageAlt}
+            style={visualStyle(heroAuction.bg, heroAuction.imageUrl)}
+          >
             <div className="badge-row">
               <span className="badge">Vendeur verifie</span>
               <span className="badge gold">Bien inspecte</span>
