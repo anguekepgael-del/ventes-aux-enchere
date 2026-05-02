@@ -1,8 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { DetailRow, PageShell, SectionIntro, visualStyle } from "@/src/components/site-chrome";
+import { DetailRow, PageShell, SectionIntro } from "@/src/components/site-chrome";
 import { demoAuctions } from "@/src/lib/demo-data";
+import { visualStyle } from "@/src/lib/visual-style";
 import {
   calculateBuyerDeposit,
   calculateCommission,
