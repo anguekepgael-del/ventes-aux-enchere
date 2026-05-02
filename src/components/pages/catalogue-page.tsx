@@ -88,8 +88,9 @@ export function CataloguePage() {
                 <button
                   className="auction-visual"
                   type="button"
+                  aria-label={`${auction.title} - ${auction.imageAlt}`}
                   onClick={() => setSelectedAuctionId(auction.id)}
-                  style={visualStyle(auction.bg)}
+                  style={visualStyle(auction.bg, auction.imageUrl)}
                 >
                   <div className="badge-row">
                     <span className={`badge ${auction.verifiedSeller ? "" : "alert"}`}>
@@ -122,6 +123,12 @@ export function CataloguePage() {
           </div>
 
           <aside className="detail-panel">
+            <div
+              className="detail-media"
+              role="img"
+              aria-label={selectedAuction.imageAlt}
+              style={visualStyle(selectedAuction.bg, selectedAuction.imageUrl)}
+            />
             <p className="eyebrow">Dossier verifie</p>
             <h3>{selectedAuction.title}</h3>
             <p>
