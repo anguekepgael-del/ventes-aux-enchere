@@ -1,7 +1,30 @@
-import type { Auction, Bid, BuyerProfile, SellerProfile, User } from "@prisma/client";
-import type { AuctionRecord, BuyerRecord, SellerRecord, UserRecord } from "./api-types.js";
+import type {
+  Auction,
+  Bid,
+  BuyerProfile,
+  Category,
+  City,
+  Dispute,
+  Notification,
+  Payment,
+  SellerProfile,
+  User,
+  VerificationDocument,
+} from "@prisma/client";
+import type {
+  AuctionRecord,
+  BuyerRecord,
+  CategoryRecord,
+  CityRecord,
+  DisputeRecord,
+  NotificationRecord,
+  PaymentRecord,
+  SellerRecord,
+  UserRecord,
+  VerificationDocumentRecord,
+} from "./api-types.js";
 
-function toNumber(value: unknown) {
+export function toNumber(value: unknown) {
   if (typeof value === "number") {
     return value;
   }
@@ -72,5 +95,78 @@ export function mapAuction(auction: Auction & { bids?: Bid[] }): AuctionRecord {
       amount: toNumber(bid.amount),
       createdAt: bid.createdAt.toISOString(),
     })),
+  };
+}
+
+export function mapPayment(payment: Payment): PaymentRecord {
+  return {
+    id: payment.id,
+    buyerId: payment.buyerId,
+    sellerId: payment.sellerId ?? undefined,
+    auctionId: payment.auctionId ?? undefined,
+    provider: payment.provider,
+    purpose: payment.purpose,
+    amount: toNumber(payment.amount),
+    status: payment.status,
+    externalReference: payment.externalReference ?? undefined,
+    createdAt: payment.createdAt.toISOString(),
+  };
+}
+
+export function mapDispute(dispute: Dispute): DisputeRecord {
+  return {
+    id: dispute.id,
+    auctionId: dispute.auctionId,
+    openedByUserId: dispute.openedByUserId,
+    reason: dispute.reason,
+    status: dispute.status,
+    priority: dispute.priority,
+    createdAt: dispute.createdAt.toISOString(),
+  };
+}
+
+export function mapNotification(notification: Notification): NotificationRecord {
+  return {
+    id: notification.id,
+    userId: notification.userId,
+    channel: notification.channel,
+    subject: notification.subject,
+    body: notification.body,
+    status: notification.status,
+    createdAt: notification.createdAt.toISOString(),
+  };
+}
+
+export function mapCategory(category: Category): CategoryRecord {
+  return {
+    id: category.id,
+    name: category.name,
+    slug: category.slug,
+    riskLevel: category.riskLevel,
+    enabled: category.enabled,
+    createdAt: category.createdAt.toISOString(),
+  };
+}
+
+export function mapCity(city: City): CityRecord {
+  return {
+    id: city.id,
+    name: city.name,
+    region: city.region ?? undefined,
+    enabled: city.enabled,
+    createdAt: city.createdAt.toISOString(),
+  };
+}
+
+export function mapDocument(document: VerificationDocument): VerificationDocumentRecord {
+  return {
+    id: document.id,
+    userId: document.userId ?? undefined,
+    auctionId: document.auctionId ?? undefined,
+    type: document.type,
+    fileKey: document.fileKey,
+    status: document.status,
+    note: document.note ?? undefined,
+    createdAt: document.createdAt.toISOString(),
   };
 }

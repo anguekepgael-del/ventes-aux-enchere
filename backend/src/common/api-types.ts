@@ -13,6 +13,7 @@ export type AuctionStatus = "draft" | "pending_review" | "live" | "closed" | "ca
 export type PaymentStatus = "pending" | "authorized" | "captured" | "escrowed" | "released" | "refunded" | "failed";
 export type DisputeStatus = "open" | "in_review" | "resolved" | "rejected";
 export type NotificationChannel = "email" | "sms" | "whatsapp" | "in_app";
+export type DocumentStatus = "pending" | "valid" | "rejected" | "expired";
 
 export type UserRecord = {
   id: string;
@@ -100,5 +101,33 @@ export type NotificationRecord = {
   subject: string;
   body: string;
   status: "queued" | "sent" | "failed";
+  createdAt: string;
+};
+
+export type CategoryRecord = {
+  id: string;
+  name: string;
+  slug: string;
+  riskLevel: string;
+  enabled: boolean;
+  createdAt: string;
+};
+
+export type CityRecord = {
+  id: string;
+  name: string;
+  region?: string;
+  enabled: boolean;
+  createdAt: string;
+};
+
+export type VerificationDocumentRecord = {
+  id: string;
+  userId?: string;
+  auctionId?: string;
+  type: string;
+  fileKey: string;
+  status: DocumentStatus;
+  note?: string;
   createdAt: string;
 };

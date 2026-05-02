@@ -1,6 +1,9 @@
 import { Module } from "@nestjs/common";
 import { AuctionsModule } from "./auctions/auctions.module.js";
 import { BuyersModule } from "./buyers/buyers.module.js";
+import { CategoriesModule } from "./categories/categories.module.js";
+import { CitiesModule } from "./cities/cities.module.js";
+import { DocumentsModule } from "./documents/documents.module.js";
 import { DisputesModule } from "./disputes/disputes.module.js";
 import { HealthModule } from "./health/health.module.js";
 import { NotificationsModule } from "./notifications/notifications.module.js";
@@ -18,6 +21,9 @@ import { DatabaseModule } from "./database/database.module.js";
     UsersModule,
     SellersModule,
     BuyersModule,
+    CategoriesModule,
+    CitiesModule,
+    DocumentsModule,
     AuctionsModule,
     PaymentsModule,
     DisputesModule,

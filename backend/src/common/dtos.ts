@@ -179,3 +179,77 @@ export class CreateNotificationDto {
   @IsString()
   body: string;
 }
+
+export class CreateCategoryDto {
+  @IsString()
+  name: string;
+
+  @IsString()
+  slug: string;
+
+  @IsOptional()
+  @IsString()
+  riskLevel?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  enabled?: boolean;
+}
+
+export class UpdateCategoryDto {
+  @IsOptional()
+  @IsString()
+  riskLevel?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  enabled?: boolean;
+}
+
+export class CreateCityDto {
+  @IsString()
+  name: string;
+
+  @IsOptional()
+  @IsString()
+  region?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  enabled?: boolean;
+}
+
+export class UpdateCityDto {
+  @IsOptional()
+  @IsString()
+  region?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  enabled?: boolean;
+}
+
+export class CreateVerificationDocumentDto {
+  @IsOptional()
+  @IsString()
+  userId?: string;
+
+  @IsOptional()
+  @IsString()
+  auctionId?: string;
+
+  @IsString()
+  type: string;
+
+  @IsString()
+  fileKey: string;
+}
+
+export class ReviewVerificationDocumentDto {
+  @IsIn(["pending", "valid", "rejected", "expired"])
+  status: "pending" | "valid" | "rejected" | "expired";
+
+  @IsOptional()
+  @IsString()
+  note?: string;
+}

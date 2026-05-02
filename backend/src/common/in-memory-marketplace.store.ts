@@ -2,11 +2,14 @@ import { Injectable } from "@nestjs/common";
 import type {
   AuctionRecord,
   BuyerRecord,
+  CategoryRecord,
+  CityRecord,
   DisputeRecord,
   NotificationRecord,
   PaymentRecord,
   SellerRecord,
   UserRecord,
+  VerificationDocumentRecord,
 } from "./api-types.js";
 
 function now() {
@@ -95,6 +98,41 @@ export class InMemoryMarketplaceStore {
   readonly payments: PaymentRecord[] = [];
   readonly disputes: DisputeRecord[] = [];
   readonly notifications: NotificationRecord[] = [];
+  readonly categories: CategoryRecord[] = [
+    {
+      id: "category_phones",
+      name: "Telephones",
+      slug: "telephones",
+      riskLevel: "standard",
+      enabled: true,
+      createdAt: now(),
+    },
+    {
+      id: "category_vehicles",
+      name: "Vehicules",
+      slug: "vehicules",
+      riskLevel: "controlled",
+      enabled: true,
+      createdAt: now(),
+    },
+  ];
+  readonly cities: CityRecord[] = [
+    {
+      id: "city_douala",
+      name: "Douala",
+      region: "Littoral",
+      enabled: true,
+      createdAt: now(),
+    },
+    {
+      id: "city_yaounde",
+      name: "Yaounde",
+      region: "Centre",
+      enabled: true,
+      createdAt: now(),
+    },
+  ];
+  readonly documents: VerificationDocumentRecord[] = [];
 
   nextId(prefix: string) {
     return id(prefix);

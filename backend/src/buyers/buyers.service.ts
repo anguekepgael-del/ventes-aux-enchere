@@ -1,17 +1,39 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException, Optional } from "@nestjs/common";
 import type { BuyerRecord } from "../common/api-types.js";
+import { shouldUsePrisma } from "../common/backend-data-source.js";
 import { CreateBuyerDto } from "../common/dtos.js";
 import { InMemoryMarketplaceStore } from "../common/in-memory-marketplace.store.js";
+import { mapBuyer, mapDispute, mapPayment, toNumber } from "../common/prisma-mappers.js";
+import { PrismaService } from "../database/prisma.service.js";
 
 @Injectable()
 export class BuyersService {
-  constructor(private readonly store: InMemoryMarketplaceStore) {}
+  constructor(
+    private readonly store: InMemoryMarketplaceStore,
+    @Optional() private readonly prisma?: PrismaService,
+  ) {}
 
-  list() {
+  private getPrisma() {
+    return shouldUsePrisma(this.prisma) ? this.prisma : undefined;
+  }
+
+  async list() {
+    const prisma = this.getPrisma();
+    if (prisma) {
+      const buyers = await prisma.buyerProfile.findMany({ orderBy: { createdAt: "desc" } });
+      return buyers.map(mapBuyer);
+    }
+
     return this.store.buyers;
   }
 
-  create(dto: CreateBuyerDto): BuyerRecord {
+  async create(dto: CreateBuyerDto): Promise<BuyerRecord> {
+    const prisma = this.getPrisma();
+    if (prisma) {
+      const buyer = await prisma.buyerProfile.create({ data: { userId: dto.userId } });
+      return mapBuyer(buyer);
+    }
+
     const buyer: BuyerRecord = {
       id: this.store.nextId("buyer"),
       userId: dto.userId,
@@ -24,7 +46,16 @@ export class BuyersService {
     return buyer;
   }
 
-  get(id: string) {
+  async get(id: string) {
+    const prisma = this.getPrisma();
+    if (prisma) {
+      const buyer = await prisma.buyerProfile.findUnique({ where: { id } });
+      if (!buyer) {
+        throw new NotFoundException("Acheteur introuvable");
+      }
+      return mapBuyer(buyer);
+    }
+
     const buyer = this.store.buyers.find((item) => item.id === id);
     if (!buyer) {
       throw new NotFoundException("Acheteur introuvable");
@@ -32,8 +63,35 @@ export class BuyersService {
     return buyer;
   }
 
-  portfolio(id: string) {
-    const buyer = this.get(id);
+  async portfolio(id: string) {
+    const prisma = this.getPrisma();
+    if (prisma) {
+      const buyer = await prisma.buyerProfile.findUnique({
+        where: { id },
+        include: {
+          bids: true,
+          payments: true,
+          user: { include: { disputes: true } },
+        },
+      });
+      if (!buyer) {
+        throw new NotFoundException("Acheteur introuvable");
+      }
+
+      return {
+        buyer: mapBuyer(buyer),
+        bids: buyer.bids.map((bid) => ({
+          auctionId: bid.auctionId,
+          buyerId: bid.buyerId,
+          amount: toNumber(bid.amount),
+          createdAt: bid.createdAt.toISOString(),
+        })),
+        payments: buyer.payments.map(mapPayment),
+        disputes: buyer.user.disputes.map(mapDispute),
+      };
+    }
+
+    const buyer = await this.get(id);
     return {
       buyer,
       bids: this.store.auctions.flatMap((auction) =>
