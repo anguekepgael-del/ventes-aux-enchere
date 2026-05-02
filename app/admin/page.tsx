@@ -1,5 +1,6 @@
 import { PageShell, SectionIntro } from "@/src/components/site-chrome";
-import { adminCases } from "@/src/lib/demo-data";
+import { adminCases, platformImages } from "@/src/lib/demo-data";
+import { mediaStyle } from "@/src/lib/visual-style";
 
 export default function Page() {
   return (
@@ -15,6 +16,12 @@ export default function Page() {
             ))}
           </aside>
           <div className="admin-board">
+            <div
+              className="admin-media"
+              role="img"
+              aria-label="Back-office professionnel de suivi des operations"
+              style={mediaStyle(platformImages.adminDesk)}
+            />
             <div className="admin-stats">
               <article>
                 <strong>18</strong>
