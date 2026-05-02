@@ -14,6 +14,7 @@ import {
   isValidCameroonMobileMoneyPhone,
   normalizeCameroonPhone,
 } from "../src/marketplace-core.mjs";
+import { getStripeCardPaymentConfig } from "../src/payment-config.mjs";
 
 test("formats XAF prices with French grouping and FCFA suffix", () => {
   assert.equal(formatXaf(1250000), "1 250 000 FCFA");
@@ -121,5 +122,32 @@ test("extends auction when a bid arrives inside the anti-sniping window", () => 
       bidAt: new Date("2026-05-02T11:55:00.000Z"),
     }).toISOString(),
     originalEnd.toISOString(),
+  );
+});
+
+test("detects Stripe card payment readiness from public and secret keys", () => {
+  assert.deepEqual(
+    getStripeCardPaymentConfig({
+      publishableKey: "pk_test_123",
+      secretKey: "",
+      currency: "xaf",
+    }),
+    {
+      provider: "stripe",
+      mode: "test",
+      currency: "xaf",
+      publishableKey: "pk_test_123",
+      publishableKeyConfigured: true,
+      serverCheckoutConfigured: false,
+    },
+  );
+
+  assert.equal(
+    getStripeCardPaymentConfig({
+      publishableKey: "pk_live_123",
+      secretKey: "sk_live_123",
+      currency: "usd",
+    }).mode,
+    "live",
   );
 });

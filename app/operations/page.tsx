@@ -14,9 +14,11 @@ import {
   getEscrowDecision,
 } from "@/src/lib/marketplace-core";
 import { mediaStyle } from "@/src/lib/visual-style";
+import { getConfiguredStripeCardPaymentConfig } from "@/src/lib/payment-config";
 
 export default function Page() {
   const selectedAuction = demoAuctions[0];
+  const cardPayment = getConfiguredStripeCardPaymentConfig();
   const sellerSettlement = calculateSellerPayout({ finalPrice: selectedAuction.currentPrice });
   const escrowDecision = getEscrowDecision({
     paymentCaptured: true,
@@ -64,6 +66,16 @@ export default function Page() {
                   </small>
                 </span>
               ))}
+              <span>
+                <strong>Stripe carte bancaire</strong>
+                <small>
+                  {cardPayment.publishableKeyConfigured
+                    ? `cle publique ${cardPayment.mode} configuree`
+                    : "cle publique non configuree"}
+                  {" - "}
+                  {cardPayment.serverCheckoutConfigured ? "checkout serveur actif" : "cle secrete serveur requise"}
+                </small>
+              </span>
             </div>
           </article>
 

@@ -53,8 +53,8 @@ export const paymentMethods = [
   {
     id: "card",
     label: "Carte bancaire",
-    settlement: "option internationale",
-    status: "option",
+    settlement: "Stripe Checkout test",
+    status: "configure test",
   },
   {
     id: "bank_transfer",
