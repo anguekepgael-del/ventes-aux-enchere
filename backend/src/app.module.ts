@@ -8,9 +8,11 @@ import { PaymentsModule } from "./payments/payments.module.js";
 import { SellersModule } from "./sellers/sellers.module.js";
 import { UsersModule } from "./users/users.module.js";
 import { MarketplaceDataModule } from "./common/marketplace-data.module.js";
+import { DatabaseModule } from "./database/database.module.js";
 
 @Module({
   imports: [
+    DatabaseModule,
     MarketplaceDataModule,
     HealthModule,
     UsersModule,
