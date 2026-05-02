@@ -51,6 +51,18 @@ npm run db:push
 
 `db:push` demande une variable `DATABASE_URL` valide vers PostgreSQL.
 
+## Source de donnees
+
+Le backend accepte deux modes :
+
+```bash
+BACKEND_DATA_SOURCE=memory
+BACKEND_DATA_SOURCE=prisma
+```
+
+`memory` garde les donnees de demonstration en memoire pour developper vite.
+`prisma` utilise PostgreSQL via Prisma. Pour activer ce mode, fournir `DATABASE_URL`, lancer `npm run db:push`, puis demarrer le backend.
+
 ## Etat actuel
 
-Les services utilisent encore un store memoire pour permettre des tests rapides sans base distante. Le module `DatabaseModule` et `PrismaService` sont prets pour migrer progressivement chaque service vers PostgreSQL.
+Les services `users`, `sellers` et `auctions` savent deja basculer vers Prisma quand `BACKEND_DATA_SOURCE=prisma`. Les autres domaines restent temporairement sur le store memoire et seront migres progressivement.

@@ -8,6 +8,7 @@ import { NotificationsService } from "../backend/dist/notifications/notification
 import { PaymentsService } from "../backend/dist/payments/payments.service.js";
 import { SellersService } from "../backend/dist/sellers/sellers.service.js";
 import { UsersService } from "../backend/dist/users/users.service.js";
+import { mapAuction, mapSeller, mapUser } from "../backend/dist/common/prisma-mappers.js";
 
 function createServices() {
   const store = new InMemoryMarketplaceStore();
@@ -23,9 +24,9 @@ function createServices() {
   };
 }
 
-test("backend user, seller and buyer APIs create verified marketplace identities", () => {
+test("backend user, seller and buyer APIs create verified marketplace identities", async () => {
   const { buyers, sellers, users } = createServices();
-  const user = users.create({
+  const user = await users.create({
     fullName: "Nadine Mballa",
     email: "nadine@example.cm",
     phone: "+237677111222",
@@ -34,16 +35,16 @@ test("backend user, seller and buyer APIs create verified marketplace identities
   });
 
   assert.equal(user.identityStatus, "pending");
-  users.verify(user.id, { emailVerified: true, phoneVerified: true, identityStatus: "verified" });
-  assert.equal(users.get(user.id).phoneVerified, true);
+  await users.verify(user.id, { emailVerified: true, phoneVerified: true, identityStatus: "verified" });
+  assert.equal((await users.get(user.id)).phoneVerified, true);
 
-  const seller = sellers.create({ userId: user.id, displayName: "Nadine Shop", type: "company" });
-  sellers.review(seller.id, { verificationStatus: "verified", trustBadges: ["Vendeur verifie"] });
-  sellers.requestDocuments(seller.id, { documents: ["Facture RCCM"] });
-  assert.equal(sellers.get(seller.id).verificationStatus, "verified");
-  assert.ok(sellers.get(seller.id).documentsRequested.includes("Facture RCCM"));
+  const seller = await sellers.create({ userId: user.id, displayName: "Nadine Shop", type: "company" });
+  await sellers.review(seller.id, { verificationStatus: "verified", trustBadges: ["Vendeur verifie"] });
+  await sellers.requestDocuments(seller.id, { documents: ["Facture RCCM"] });
+  assert.equal((await sellers.get(seller.id)).verificationStatus, "verified");
+  assert.ok((await sellers.get(seller.id)).documentsRequested.includes("Facture RCCM"));
 
-  const buyerUser = users.create({
+  const buyerUser = await users.create({
     fullName: "Eric Njoh",
     email: "eric@example.cm",
     phone: "+237699333444",
@@ -54,9 +55,9 @@ test("backend user, seller and buyer APIs create verified marketplace identities
   assert.equal(buyers.portfolio(buyer.id).buyer.userId, buyerUser.id);
 });
 
-test("backend auction API reviews listings and accepts valid bids", () => {
+test("backend auction API reviews listings and accepts valid bids", async () => {
   const { auctions } = createServices();
-  const auction = auctions.create({
+  const auction = await auctions.create({
     sellerId: "seller_demo",
     title: "MacBook Pro M3",
     category: "Ordinateurs",
@@ -68,9 +69,9 @@ test("backend auction API reviews listings and accepts valid bids", () => {
   });
 
   assert.equal(auction.status, "pending_review");
-  auctions.review(auction.id, { status: "live", inspected: true, documentValid: true });
+  await auctions.review(auction.id, { status: "live", inspected: true, documentValid: true });
 
-  const bid = auctions.placeBid(auction.id, { buyerId: "buyer_demo", amount: 950000 });
+  const bid = await auctions.placeBid(auction.id, { buyerId: "buyer_demo", amount: 950000 });
   assert.equal(bid.accepted, true);
   assert.equal(bid.minimumNextBid, 1000000);
 });
@@ -107,4 +108,76 @@ test("backend payment, dispute and notification APIs cover escrow operations", (
   });
   notifications.markSent(notification.id);
   assert.equal(notifications.list("user_buyer_demo")[0].status, "sent");
+});
+
+test("prisma mappers normalize database records into API contracts", () => {
+  const createdAt = new Date("2026-05-02T10:00:00.000Z");
+  const user = mapUser({
+    id: "user_db",
+    fullName: "Grace Muna",
+    email: "grace@example.cm",
+    phone: "+237677000111",
+    passwordHash: null,
+    role: "buyer",
+    city: "Douala",
+    emailVerified: true,
+    phoneVerified: false,
+    identityStatus: "pending",
+    suspended: false,
+    lastLoginAt: null,
+    createdAt,
+    updatedAt: createdAt,
+  });
+
+  assert.equal(user.createdAt, "2026-05-02T10:00:00.000Z");
+  assert.equal(user.role, "buyer");
+
+  const seller = mapSeller({
+    id: "seller_db",
+    userId: "user_db",
+    displayName: "Grace Boutique",
+    type: "company",
+    verificationStatus: "verified",
+    trustBadges: ["Vendeur verifie"],
+    documentsRequested: [],
+    payoutAccount: null,
+    commissionRate: 0.075,
+    createdAt,
+    updatedAt: createdAt,
+  });
+  assert.deepEqual(seller.trustBadges, ["Vendeur verifie"]);
+
+  const auction = mapAuction({
+    id: "auction_db",
+    sellerId: "seller_db",
+    categoryId: null,
+    title: "Lot ordinateurs",
+    description: null,
+    category: "Ordinateurs",
+    city: "Yaounde",
+    startPrice: 500000,
+    currentPrice: 575000,
+    minimumIncrement: 25000,
+    reservePrice: 650000,
+    buyNowPrice: null,
+    status: "live",
+    inspected: true,
+    documentValid: true,
+    deliveryMode: null,
+    endsAt: createdAt,
+    createdAt,
+    updatedAt: createdAt,
+    bids: [
+      {
+        id: "bid_db",
+        auctionId: "auction_db",
+        buyerId: "buyer_db",
+        amount: 575000,
+        createdAt,
+      },
+    ],
+  });
+
+  assert.equal(auction.buyNowPrice, undefined);
+  assert.equal(auction.bids[0].amount, 575000);
 });
