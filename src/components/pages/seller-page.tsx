@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { PageShell, SectionIntro } from "@/src/components/site-chrome";
-import { wizardSteps } from "@/src/lib/demo-data";
+import { platformImages, wizardSteps } from "@/src/lib/demo-data";
+import { mediaStyle } from "@/src/lib/visual-style";
 
 export function SellerPage() {
   const [wizardStep, setWizardStep] = useState(0);
@@ -57,6 +58,12 @@ export function SellerPage() {
             </div>
           </div>
           <div className="seller-summary">
+            <div
+              className="supporting-media"
+              role="img"
+              aria-label="Vendeur camerounais preparant un dossier de verification"
+              style={mediaStyle(platformImages.sellerDesk)}
+            />
             <h3>Statut vendeur</h3>
             <div className="status-list">
               <span>
