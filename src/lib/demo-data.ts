@@ -16,6 +16,19 @@ export type DemoAuction = {
   documentValid: boolean;
   delivery: string;
   bg: string;
+  imageUrl: string;
+  imageAlt: string;
+};
+
+export const platformImages = {
+  sellerDesk:
+    "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1400&q=88",
+  buyerDesk:
+    "https://images.unsplash.com/photo-1556740758-90de374c12ad?auto=format&fit=crop&w=1400&q=88",
+  operations:
+    "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1400&q=88",
+  adminDesk:
+    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1400&q=88",
 };
 
 export const demoAuctions: DemoAuction[] = [
@@ -37,6 +50,9 @@ export const demoAuctions: DemoAuction[] = [
     documentValid: true,
     delivery: "Retrait Akwa ou livraison Douala",
     bg: "linear-gradient(135deg, #1b1b1b, #5f6064 55%, #d98f22)",
+    imageUrl:
+      "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1400&q=88",
+    imageAlt: "Smartphone premium photographie en studio",
   },
   {
     id: "car-01",
@@ -56,6 +72,9 @@ export const demoAuctions: DemoAuction[] = [
     documentValid: true,
     delivery: "Visite sur rendez-vous, transfert admin",
     bg: "linear-gradient(135deg, #101010, #284332 55%, #b9852f)",
+    imageUrl:
+      "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=1400&q=88",
+    imageAlt: "SUV moderne photographie de profil en lumiere naturelle",
   },
   {
     id: "agri-01",
@@ -75,6 +94,9 @@ export const demoAuctions: DemoAuction[] = [
     documentValid: false,
     delivery: "Retrait entrepot partenaire",
     bg: "linear-gradient(135deg, #141414, #4d5731 55%, #d98f22)",
+    imageUrl:
+      "https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&w=1400&q=88",
+    imageAlt: "Materiel agricole et culture professionnelle",
   },
   {
     id: "office-01",
@@ -94,6 +116,9 @@ export const demoAuctions: DemoAuction[] = [
     documentValid: true,
     delivery: "Livraison disponible",
     bg: "linear-gradient(135deg, #101010, #363637 50%, #cf8a20)",
+    imageUrl:
+      "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1400&q=88",
+    imageAlt: "Espace bureau moderne avec ordinateurs et imprimantes",
   },
   {
     id: "jewel-01",
@@ -113,6 +138,9 @@ export const demoAuctions: DemoAuction[] = [
     documentValid: true,
     delivery: "Retrait securise point partenaire",
     bg: "linear-gradient(135deg, #070707, #514022 55%, #efb64f)",
+    imageUrl:
+      "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=1400&q=88",
+    imageAlt: "Bijou en or photographie macro premium",
   },
   {
     id: "home-01",
@@ -132,6 +160,9 @@ export const demoAuctions: DemoAuction[] = [
     documentValid: true,
     delivery: "Retrait ou transport local",
     bg: "linear-gradient(135deg, #171717, #4e4f52 50%, #d98f22)",
+    imageUrl:
+      "https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?auto=format&fit=crop&w=1400&q=88",
+    imageAlt: "Refrigerateur moderne dans une cuisine premium",
   },
 ];
 
