@@ -1,6 +1,7 @@
 import { BuyerCard, PageShell, SectionIntro } from "@/src/components/site-chrome";
-import { demoAuctions } from "@/src/lib/demo-data";
+import { demoAuctions, platformImages } from "@/src/lib/demo-data";
 import { calculateBuyerDeposit, formatXaf } from "@/src/lib/marketplace-core";
+import { mediaStyle } from "@/src/lib/visual-style";
 
 export default function Page() {
   const depositTotal = demoAuctions
@@ -11,6 +12,12 @@ export default function Page() {
     <PageShell>
       <section className="section-block light route-hero">
         <SectionIntro eyebrow="Espace acheteur" title="Suivi des encheres, cautions et messages" />
+        <div
+          className="wide-media"
+          role="img"
+          aria-label="Acheteur utilisant un service de paiement mobile securise"
+          style={mediaStyle(platformImages.buyerDesk)}
+        />
         <div className="buyer-grid">
           <BuyerCard label="Encheres actives" value="3" detail="dont 1 bientot terminee" />
           <BuyerCard label="Cautions bloquees" value={formatXaf(depositTotal)} detail="remboursables selon resultat" />
