@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import { OtpPage } from "@/src/components/pages/auth-pages";
 
 export default function Page() {
-  redirect("/connexion");
+  return <OtpPage />;
 }
