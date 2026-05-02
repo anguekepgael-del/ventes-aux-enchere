@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { PageShell, visualStyle } from "@/src/components/site-chrome";
+import { PageShell } from "@/src/components/site-chrome";
 import { demoAuctions } from "@/src/lib/demo-data";
 import { calculateBuyerDeposit, formatXaf } from "@/src/lib/marketplace-core";
+import { visualStyle } from "@/src/lib/visual-style";
 
 const portals = [
   ["Catalogue", "Explorer les encheres actives avec filtres et detail complet.", "/catalogue"],
