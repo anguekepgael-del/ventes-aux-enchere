@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { DetailRow, PageShell, SectionIntro } from "@/src/components/site-chrome";
 import { demoAuctions } from "@/src/lib/demo-data";
 import { visualStyle } from "@/src/lib/visual-style";
@@ -113,9 +114,9 @@ export function CataloguePage() {
                   </div>
                   <div className="card-footer">
                     <small>Caution {formatXaf(calculateBuyerDeposit({ startPrice: auction.startPrice }))}</small>
-                    <button className="ghost-btn" type="button" onClick={() => setSelectedAuctionId(auction.id)}>
+                    <Link className="ghost-btn" href={`/catalogue/${auction.id}`}>
                       Detail
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </article>
