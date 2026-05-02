@@ -14,7 +14,11 @@ import {
   isValidCameroonMobileMoneyPhone,
   normalizeCameroonPhone,
 } from "../src/marketplace-core.mjs";
-import { getStripeCardPaymentConfig } from "../src/payment-config.mjs";
+import {
+  getNotchPayMobileMoneyConfig,
+  getNotchPayMobileMoneyChannel,
+  getStripeCardPaymentConfig,
+} from "../src/payment-config.mjs";
 
 test("formats XAF prices with French grouping and FCFA suffix", () => {
   assert.equal(formatXaf(1250000), "1 250 000 FCFA");
@@ -150,4 +154,23 @@ test("detects Stripe card payment readiness from public and secret keys", () => 
     }).mode,
     "live",
   );
+});
+
+test("detects NotchPay mobile money readiness and Cameroon channels", () => {
+  assert.deepEqual(
+    getNotchPayMobileMoneyConfig({
+      publicKey: "pk_test_123",
+      currency: "XAF",
+    }),
+    {
+      provider: "notchpay",
+      mode: "test",
+      currency: "XAF",
+      publicKeyConfigured: true,
+    },
+  );
+
+  assert.equal(getNotchPayMobileMoneyChannel("orange_money"), "cm.orange");
+  assert.equal(getNotchPayMobileMoneyChannel("mtn_momo"), "cm.mtn");
+  assert.equal(getNotchPayMobileMoneyChannel("unsupported"), undefined);
 });

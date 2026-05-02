@@ -14,11 +14,15 @@ import {
   getEscrowDecision,
 } from "@/src/lib/marketplace-core";
 import { mediaStyle } from "@/src/lib/visual-style";
-import { getConfiguredStripeCardPaymentConfig } from "@/src/lib/payment-config";
+import {
+  getConfiguredNotchPayMobileMoneyConfig,
+  getConfiguredStripeCardPaymentConfig,
+} from "@/src/lib/payment-config";
 
 export default function Page() {
   const selectedAuction = demoAuctions[0];
   const cardPayment = getConfiguredStripeCardPaymentConfig();
+  const mobileMoneyPayment = getConfiguredNotchPayMobileMoneyConfig();
   const sellerSettlement = calculateSellerPayout({ finalPrice: selectedAuction.currentPrice });
   const escrowDecision = getEscrowDecision({
     paymentCaptured: true,
@@ -74,6 +78,14 @@ export default function Page() {
                     : "cle publique non configuree"}
                   {" - "}
                   {cardPayment.serverCheckoutConfigured ? "checkout serveur actif" : "cle secrete serveur requise"}
+                </small>
+              </span>
+              <span>
+                <strong>NotchPay Mobile Money</strong>
+                <small>
+                  {mobileMoneyPayment.publicKeyConfigured
+                    ? `Orange Money et MTN MoMo en mode ${mobileMoneyPayment.mode}`
+                    : "simulation locale active"}
                 </small>
               </span>
             </div>
