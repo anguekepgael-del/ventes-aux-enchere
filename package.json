@@ -6,15 +6,25 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
+    "backend:build": "tsc -p backend/tsconfig.json",
+    "backend:start": "node backend/dist/main.js",
+    "backend:test": "npm run backend:build && node tests/backend-api-contracts.test.mjs",
     "build": "next build",
     "start": "next start",
-    "test": "node tests/marketplace-core.test.mjs",
+    "test": "node tests/marketplace-core.test.mjs && npm run backend:test",
     "check": "next build"
   },
   "dependencies": {
+    "@nestjs/common": "^11.1.9",
+    "@nestjs/core": "^11.1.9",
+    "@nestjs/platform-express": "^11.1.9",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.3",
     "next": "^16.1.6",
     "react": "^19.2.4",
-    "react-dom": "^19.2.4"
+    "react-dom": "^19.2.4",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",

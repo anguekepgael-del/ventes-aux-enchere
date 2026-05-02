@@ -1,6 +1,8 @@
 node_modules/
 .next/
 .vercel/
+backend/dist/
+backend/*.tsbuildinfo
 tools/
 *.log
 .DS_Store
