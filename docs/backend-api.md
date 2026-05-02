@@ -69,3 +69,25 @@ BACKEND_DATA_SOURCE=prisma
 ## Etat actuel
 
 Les services `users`, `sellers`, `buyers`, `categories`, `cities`, `documents`, `auctions`, `payments`, `disputes` et `notifications` savent deja basculer vers Prisma quand `BACKEND_DATA_SOURCE=prisma`. Les prochaines migrations prioritaires concernent les remboursements/reversements avances, les regles anti-fraude et les logs d'audit.
+
+## Paiements Mobile Money NotchPay
+
+L'application Next.js expose les endpoints transactionnels suivants pour Orange Money et MTN MoMo via NotchPay :
+
+- `GET /api/payments/mobile-money/config` : statut de configuration NotchPay et canaux disponibles.
+- `POST /api/payments/mobile-money/deposit` : creation et traitement d'une caution acheteur.
+- `POST /api/payments/mobile-money/checkout` : creation et traitement d'une caution ou d'un paiement gagnant.
+- `POST /api/payments/mobile-money/verify` : verification serveur du statut d'un paiement par reference.
+- `POST /api/payments/mobile-money/refund` : demande de remboursement NotchPay.
+- `POST /api/payments/mobile-money/payout` : reversement vendeur par transfert Mobile Money.
+
+Variables requises :
+
+```bash
+NOTCHPAY_PUBLIC_KEY=pk_test_...
+NOTCHPAY_GRANT_KEY=grant_test_...
+NOTCHPAY_CURRENCY=XAF
+NOTCHPAY_CALLBACK_PATH=/operations
+```
+
+`NOTCHPAY_GRANT_KEY` est obligatoire pour les remboursements et les reversements vendeurs, car NotchPay protege ces operations avec l'en-tete `X-Grant`.

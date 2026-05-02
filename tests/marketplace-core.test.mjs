@@ -19,6 +19,12 @@ import {
   getNotchPayMobileMoneyChannel,
   getStripeCardPaymentConfig,
 } from "../src/payment-config.mjs";
+import {
+  buildNotchPayPaymentPayload,
+  buildNotchPayRefundPayload,
+  buildNotchPayTransferPayload,
+  mapNotchPayPaymentStatus,
+} from "../src/notchpay.mjs";
 
 test("formats XAF prices with French grouping and FCFA suffix", () => {
   assert.equal(formatXaf(1250000), "1 250 000 FCFA");
@@ -173,4 +179,76 @@ test("detects NotchPay mobile money readiness and Cameroon channels", () => {
   assert.equal(getNotchPayMobileMoneyChannel("orange_money"), "cm.orange");
   assert.equal(getNotchPayMobileMoneyChannel("mtn_momo"), "cm.mtn");
   assert.equal(getNotchPayMobileMoneyChannel("unsupported"), undefined);
+});
+
+test("builds NotchPay payment, refund and seller payout payloads", () => {
+  assert.deepEqual(
+    buildNotchPayPaymentPayload({
+      amount: 50000,
+      currency: "XAF",
+      phone: "237699000111",
+      email: "buyer@example.cm",
+      reference: "dep_OM_auction_1",
+      description: "Caution enchere auction_1",
+      callback: "https://enchere.cm/operations?reference=dep_OM_auction_1",
+      channel: "cm.orange",
+      metadata: { auctionId: "auction_1", purpose: "deposit" },
+    }),
+    {
+      amount: 50000,
+      currency: "XAF",
+      phone: "237699000111",
+      email: "buyer@example.cm",
+      description: "Caution enchere auction_1",
+      reference: "dep_OM_auction_1",
+      callback: "https://enchere.cm/operations?reference=dep_OM_auction_1",
+      locked_currency: "XAF",
+      locked_channel: "cm.orange",
+      locked_country: "CM",
+      customer_meta: { auctionId: "auction_1", purpose: "deposit" },
+    },
+  );
+
+  assert.deepEqual(buildNotchPayRefundPayload({ payment: "pay_123", amount: 25000, reason: "Litige valide" }), {
+    payment: "pay_123",
+    amount: 25000,
+    reason: "Litige valide",
+  });
+
+  assert.deepEqual(
+    buildNotchPayTransferPayload({
+      amount: 925000,
+      currency: "XAF",
+      channel: "cm.mtn",
+      reference: "payout_seller_1",
+      description: "Reversement vendeur seller_1",
+      beneficiary: {
+        name: "Nadine Shop",
+        phone: "237677000222",
+        email: "seller@example.cm",
+      },
+      metadata: { sellerId: "seller_1", auctionId: "auction_1" },
+    }),
+    {
+      amount: 925000,
+      currency: "XAF",
+      channel: "cm.mtn",
+      reference: "payout_seller_1",
+      description: "Reversement vendeur seller_1",
+      beneficiary_data: {
+        name: "Nadine Shop",
+        phone: "237677000222",
+        email: "seller@example.cm",
+        country: "CM",
+      },
+      metadata: { sellerId: "seller_1", auctionId: "auction_1" },
+    },
+  );
+});
+
+test("maps NotchPay transaction statuses to internal payment statuses", () => {
+  assert.equal(mapNotchPayPaymentStatus("complete"), "captured");
+  assert.equal(mapNotchPayPaymentStatus("processing"), "authorized");
+  assert.equal(mapNotchPayPaymentStatus("failed"), "failed");
+  assert.equal(mapNotchPayPaymentStatus("expired"), "failed");
 });

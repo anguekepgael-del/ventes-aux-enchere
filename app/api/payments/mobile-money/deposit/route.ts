@@ -9,6 +9,13 @@ import {
   getConfiguredNotchPayMobileMoneyConfig,
   getNotchPayMobileMoneyChannel,
 } from "@/src/lib/payment-config";
+import {
+  buildNotchPayMobileMoneyProcessPayload,
+  buildNotchPayPaymentPayload,
+  getNotchPayPublicHeaders,
+  NOTCHPAY_API_BASE_URL,
+  type NotchPayChannel,
+} from "@/src/lib/notchpay";
 
 export const runtime = "nodejs";
 
@@ -52,30 +59,27 @@ export async function POST(request: Request) {
     const callbackPath = process.env.NOTCHPAY_CALLBACK_PATH ?? "/operations";
     const reference = `dep_${providerCode}_${body.auctionId}_${Date.now()}`;
 
-    const response = await fetch("https://api.notchpay.co/payments", {
-      method: "POST",
-      headers: {
-        Authorization: process.env.NOTCHPAY_PUBLIC_KEY ?? "",
-        "Content-Type": "application/json",
+    const paymentPayload = buildNotchPayPaymentPayload({
+      amount,
+      currency: notchPay.currency,
+      phone: normalizedPhone,
+      email: body.email,
+      description: `Caution enchere ${body.auctionId}`,
+      reference,
+      callback: `${appUrl}${callbackPath}?payment_provider=notchpay&reference=${reference}`,
+      channel: channel as NotchPayChannel,
+      metadata: {
+        buyerName: body.buyerName,
+        auctionId: body.auctionId,
+        purpose: "deposit",
+        provider: body.provider,
       },
-      body: JSON.stringify({
-        amount,
-        currency: notchPay.currency,
-        phone: normalizedPhone,
-        email: body.email,
-        description: `Caution enchere ${body.auctionId}`,
-        reference,
-        callback: `${appUrl}${callbackPath}?payment_provider=notchpay&reference=${reference}`,
-        locked_currency: notchPay.currency,
-        locked_channel: channel,
-        locked_country: "CM",
-        customer_meta: {
-          buyerName: body.buyerName,
-          auctionId: body.auctionId,
-          purpose: "deposit",
-          provider: body.provider,
-        },
-      }),
+    });
+
+    const response = await fetch(`${NOTCHPAY_API_BASE_URL}/payments`, {
+      method: "POST",
+      headers: getNotchPayPublicHeaders(),
+      body: JSON.stringify(paymentPayload),
     });
 
     const payload = await response.json().catch(() => null);
@@ -89,6 +93,19 @@ export async function POST(request: Request) {
       );
     }
 
+    const processResponse = await fetch(`${NOTCHPAY_API_BASE_URL}/payments/${reference}`, {
+      method: "POST",
+      headers: getNotchPayPublicHeaders(),
+      body: JSON.stringify(
+        buildNotchPayMobileMoneyProcessPayload({
+          channel: channel as NotchPayChannel,
+          phone: normalizedPhone,
+          clientIp: request.headers.get("x-forwarded-for")?.split(",")[0]?.trim(),
+        }),
+      ),
+    });
+    const processPayload = await processResponse.json().catch(() => null);
+
     return NextResponse.json({
       id: reference,
       status: "pending_provider_confirmation",
@@ -99,8 +116,9 @@ export async function POST(request: Request) {
       amount,
       amountLabel: formatXaf(amount),
       authorizationUrl: payload?.authorization_url,
-      transaction: payload?.transaction,
-      nextAction: payload?.authorization_url ? "redirect_to_notchpay_checkout" : "show_mobile_money_prompt",
+      transaction: processPayload?.transaction ?? payload?.transaction,
+      nextAction: processResponse.ok ? "confirm_mobile_money_prompt" : "redirect_to_notchpay_checkout",
+      process: processPayload,
     });
   }
 
