@@ -166,6 +166,10 @@ export const demoAuctions: DemoAuction[] = [
   },
 ];
 
+export function getDemoAuctionById(id: string): DemoAuction | undefined {
+  return demoAuctions.find((auction) => auction.id === id);
+}
+
 export const wizardSteps = [
   {
     label: "Bien",
