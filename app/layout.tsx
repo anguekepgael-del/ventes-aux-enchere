@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import "./globals.css";
 import "./interactive.css";
 import "./codex-fixes.css";
+import "./auth-pages.css";
 
 export const metadata: Metadata = {
   title: "Enchere.cm | Encheres securisees au Cameroun",
