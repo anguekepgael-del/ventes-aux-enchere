@@ -18,8 +18,9 @@ export function SiteHeader() {
         <Link href="/vendeur">Vendeur</Link>
         <Link href="/acheteur">Acheteur</Link>
         <Link href="/operations">Operations</Link>
+        <Link href="/comment-ca-marche">Comment ca marche</Link>
         <Link href="/admin">Admin</Link>
-        <Link href="/confiance">Confiance</Link>
+        <Link href="/faq">Aide</Link>
       </nav>
       <div className="header-actions">
         <Link className="ghost-btn" href="/connexion">
@@ -42,8 +43,10 @@ export function SiteFooter() {
           <span>Douala, Yaounde, Bafoussam, Garoua, Limbe, Kribi</span>
         </div>
         <nav aria-label="Pages legales">
-          <Link href="/confiance">CGU</Link>
-          <Link href="/confiance">Confidentialite</Link>
+          <Link href="/conditions-generales">CGU</Link>
+          <Link href="/politique-confidentialite">Confidentialite</Link>
+          <Link href="/mentions-legales">Mentions legales</Link>
+          <Link href="/contact">Contact</Link>
           <Link href="/operations">Biens interdits</Link>
           <Link href="/admin">Litiges</Link>
         </nav>

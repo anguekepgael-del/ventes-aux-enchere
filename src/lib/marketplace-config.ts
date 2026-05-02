@@ -111,7 +111,7 @@ export function getMarketplaceConfig() {
     commission: {
       defaultRate: 0.075,
       buyerDepositRate: 0.1,
-      minimumDeposit: 25000,
+      smallAuctionDeposit: 5000,
     },
   };
 }

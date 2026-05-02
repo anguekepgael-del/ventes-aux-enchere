@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import "./globals.css";
 import "./interactive.css";
+import "./codex-fixes.css";
 
 export const metadata: Metadata = {
   title: "Enchere.cm | Encheres securisees au Cameroun",

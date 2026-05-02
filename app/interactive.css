@@ -124,7 +124,7 @@
 
 .step-tabs {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 8px;
   margin-bottom: 20px;
 }
@@ -158,13 +158,20 @@ label {
   font-weight: 800;
 }
 
-input {
+input,
+textarea {
   min-height: 44px;
   padding: 0 12px;
   color: var(--ink);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--paper);
+}
+
+textarea {
+  min-height: 120px;
+  padding-top: 12px;
+  resize: vertical;
 }
 
 .wizard-footer {
@@ -193,6 +200,23 @@ input {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--muted);
+}
+
+.seller-checklist {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+  padding: 14px;
+  color: var(--ink);
+  background: #fff8ec;
+  border: 1px solid #f2ddb6;
+  border-radius: var(--radius);
+}
+
+.seller-checklist p {
+  margin: 0;
+  color: var(--soft, var(--text-muted));
+  line-height: 1.55;
 }
 
 .buyer-card {
@@ -412,6 +436,62 @@ input {
   border-color: #f1c4bf;
 }
 
+.faq-grid,
+.legal-grid,
+.contact-layout {
+  display: grid;
+  gap: 16px;
+}
+
+.faq-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.faq-card,
+.legal-panel {
+  display: grid;
+  gap: 10px;
+  min-height: 180px;
+  padding: 22px;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.06);
+}
+
+.faq-card p,
+.legal-panel p {
+  margin: 0;
+  color: var(--soft, var(--text-muted));
+  line-height: 1.6;
+}
+
+.contact-layout {
+  grid-template-columns: minmax(0, 0.95fr) minmax(320px, 0.58fr);
+  align-items: start;
+}
+
+.contact-media {
+  min-height: clamp(300px, 42vw, 520px);
+  margin: 0;
+}
+
+.contact-card {
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.legal-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.legal-badges {
+  margin-top: 18px;
+}
+
 .admin-table-wrap {
   overflow: auto;
 }
@@ -467,6 +547,9 @@ input {
   .seller-layout,
   .portal-grid,
   .operations-grid,
+  .faq-grid,
+  .legal-grid,
+  .contact-layout,
   .detail-hero-grid,
   .auction-detail-layout {
     grid-template-columns: 1fr;

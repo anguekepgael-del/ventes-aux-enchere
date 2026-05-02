@@ -29,6 +29,8 @@ export const platformImages = {
     "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1400&q=88",
   adminDesk:
     "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1400&q=88",
+  supportDesk:
+    "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1400&q=88",
 };
 
 export const demoAuctions: DemoAuction[] = [
@@ -172,45 +174,81 @@ export function getDemoAuctionById(id: string): DemoAuction | undefined {
 
 export const wizardSteps = [
   {
-    label: "Bien",
-    title: "Informations du bien",
+    label: "Infos",
+    title: "Informations generales",
     fields: [
       ["Titre", "iPhone 14 Pro Max 256 Go"],
       ["Categorie", "Telephones"],
+      ["Sous-categorie", "Smartphone premium"],
       ["Ville", "Douala"],
+      ["Quartier", "Akwa"],
       ["Etat", "Tres bon"],
     ],
   },
   {
-    label: "Prix",
+    label: "Preuves",
+    title: "Medias et preuves",
+    fields: [
+      ["Photos obligatoires", "8 images"],
+      ["Video optionnelle", "1 video courte"],
+      ["Facture", "Facture PDF"],
+      ["Preuve propriete", "Document valide"],
+      ["Numero serie / IMEI", "IMEI controle"],
+    ],
+  },
+  {
+    label: "Enchere",
     title: "Prix et conditions d'enchere",
     fields: [
       ["Prix de depart", "650000"],
-      ["Palier minimum", "25000"],
       ["Prix de reserve", "900000"],
+      ["Palier minimum", "25000"],
+      ["Duree", "72 heures"],
+      ["Date debut", "Apres validation admin"],
       ["Achat immediat", "1180000"],
     ],
   },
   {
-    label: "Documents",
-    title: "Verification et documents",
+    label: "Livraison",
+    title: "Livraison et retrait",
     fields: [
-      ["Piece vendeur", "CNI validee"],
-      ["Preuve de propriete", "Facture PDF"],
-      ["Inspection", "Agence Douala"],
-      ["Photos", "8 images"],
+      ["Retrait vendeur", "Disponible sur rendez-vous"],
+      ["Point partenaire", "Akwa"],
+      ["Livraison locale", "Douala"],
+      ["Livraison interurbaine", "Sur devis"],
+      ["Delai disponibilite", "24h apres paiement"],
     ],
   },
   {
-    label: "Validation",
-    title: "Soumission administrative",
+    label: "Declaration",
+    title: "Declaration et soumission",
     fields: [
+      ["Conditions", "Acceptees"],
+      ["Declaration honneur", "Proprietaire legitime"],
+      ["Confirmation propriete", "Oui"],
       ["Commission estimee", "7.5%"],
-      ["Mode retrait", "Point partenaire"],
-      ["Paiement", "Sequestre interne"],
       ["Statut", "Pret pour validation"],
     ],
   },
+];
+
+export const faqItems = [
+  [
+    "Pourquoi payer une caution avant d'encherir ?",
+    "La caution limite les faux encherisseurs. Elle est bloquee pendant l'enchere, puis remboursee ou deduite du paiement final selon le resultat.",
+  ],
+  [
+    "Quand le vendeur recoit-il son argent ?",
+    "Le paiement reste en sequestre interne jusqu'a la confirmation de retrait, de livraison ou de validation administrative.",
+  ],
+  [
+    "Quels documents sont demandes au vendeur ?",
+    "Identite, preuve de propriete, facture ou certificat selon la categorie, et documents professionnels pour les entreprises.",
+  ],
+  [
+    "Puis-je payer par Orange Money ou MTN Mobile Money ?",
+    "Oui, ce sont les moyens prioritaires pour les cautions et paiements gagnants, avec validation admin pour les cas manuels.",
+  ],
 ];
 
 export const adminCases = [

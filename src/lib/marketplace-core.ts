@@ -21,14 +21,45 @@ export function getMinimumNextBid({ currentPrice, increment }: AuctionRules) {
 
 export function calculateBuyerDeposit({
   startPrice,
-  rate = 0.1,
-  minimum = 25000,
+  rate,
+  minimum,
 }: {
   startPrice: number;
   rate?: number;
   minimum?: number;
 }) {
-  return Math.max(Math.round(startPrice * rate), minimum);
+  if (rate !== undefined || minimum !== undefined) {
+    return Math.max(Math.round(startPrice * (rate ?? 0.1)), minimum ?? 0);
+  }
+
+  return getDepositPolicy({ startPrice }).amount;
+}
+
+export function getDepositPolicy({ startPrice }: { startPrice: number }) {
+  if (startPrice < 50000) {
+    return {
+      amount: 0,
+      required: false,
+      status: "optional",
+      verification: "standard",
+    };
+  }
+
+  if (startPrice <= 200000) {
+    return {
+      amount: 5000,
+      required: true,
+      status: "blocked",
+      verification: "standard",
+    };
+  }
+
+  return {
+    amount: Math.round(startPrice * 0.1),
+    required: true,
+    status: "blocked",
+    verification: startPrice > 1000000 ? "enhanced" : "standard",
+  };
 }
 
 export function calculateCommission({
@@ -83,6 +114,28 @@ export function getEscrowDecision({
   }
 
   return "hold";
+}
+
+export function getAntiSnipingEndTime({
+  auctionEndsAt,
+  bidAt,
+  windowMinutes = 2,
+  extensionMinutes = 3,
+}: {
+  auctionEndsAt: Date;
+  bidAt: Date;
+  windowMinutes?: number;
+  extensionMinutes?: number;
+}) {
+  const windowMs = windowMinutes * 60 * 1000;
+  const extensionMs = extensionMinutes * 60 * 1000;
+  const remainingMs = auctionEndsAt.getTime() - bidAt.getTime();
+
+  if (remainingMs >= 0 && remainingMs <= windowMs) {
+    return new Date(auctionEndsAt.getTime() + extensionMs);
+  }
+
+  return auctionEndsAt;
 }
 
 export function canPlaceBid({

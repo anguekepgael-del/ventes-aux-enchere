@@ -83,6 +83,13 @@ export function SellerPage() {
                 <small>Vendeur verifie</small>
               </span>
             </div>
+            <div className="seller-checklist">
+              <span className="badge gold">KYC vendeur</span>
+              <p>
+                Les biens soumis passent par moderation, verification agent, controle documentaire
+                et decision administrative avant publication.
+              </p>
+            </div>
           </div>
         </div>
       </section>

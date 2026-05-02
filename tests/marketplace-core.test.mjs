@@ -7,7 +7,9 @@ import {
   calculateSellerPayout,
   canPlaceBid,
   formatXaf,
+  getAntiSnipingEndTime,
   getEscrowDecision,
+  getDepositPolicy,
   getMinimumNextBid,
   isValidCameroonMobileMoneyPhone,
   normalizeCameroonPhone,
@@ -45,8 +47,25 @@ test("blocks a bid below the minimum next bid", () => {
 });
 
 test("calculates buyer deposit with a minimum floor", () => {
-  assert.equal(calculateBuyerDeposit({ startPrice: 120000, rate: 0.1, minimum: 25000 }), 25000);
-  assert.equal(calculateBuyerDeposit({ startPrice: 900000, rate: 0.1, minimum: 25000 }), 90000);
+  assert.equal(calculateBuyerDeposit({ startPrice: 45000 }), 0);
+  assert.equal(calculateBuyerDeposit({ startPrice: 120000 }), 5000);
+  assert.equal(calculateBuyerDeposit({ startPrice: 900000 }), 90000);
+  assert.equal(calculateBuyerDeposit({ startPrice: 2500000 }), 250000);
+});
+
+test("returns deposit policy labels for Cameroon auction thresholds", () => {
+  assert.deepEqual(getDepositPolicy({ startPrice: 45000 }), {
+    amount: 0,
+    required: false,
+    status: "optional",
+    verification: "standard",
+  });
+  assert.deepEqual(getDepositPolicy({ startPrice: 2500000 }), {
+    amount: 250000,
+    required: true,
+    status: "blocked",
+    verification: "enhanced",
+  });
 });
 
 test("calculates platform commission from final sale price", () => {
@@ -84,5 +103,23 @@ test("returns escrow release decision from transaction state", () => {
       adminApproved: true,
     }),
     "disputed",
+  );
+});
+
+test("extends auction when a bid arrives inside the anti-sniping window", () => {
+  const originalEnd = new Date("2026-05-02T12:00:00.000Z");
+  assert.equal(
+    getAntiSnipingEndTime({
+      auctionEndsAt: originalEnd,
+      bidAt: new Date("2026-05-02T11:59:00.000Z"),
+    }).toISOString(),
+    "2026-05-02T12:03:00.000Z",
+  );
+  assert.equal(
+    getAntiSnipingEndTime({
+      auctionEndsAt: originalEnd,
+      bidAt: new Date("2026-05-02T11:55:00.000Z"),
+    }).toISOString(),
+    originalEnd.toISOString(),
   );
 });

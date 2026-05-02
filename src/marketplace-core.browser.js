@@ -10,12 +10,60 @@
     return currentPrice + increment;
   }
 
-  function calculateBuyerDeposit({ startPrice, rate = 0.1, minimum = 25000 }) {
-    return Math.max(Math.round(startPrice * rate), minimum);
+  function calculateBuyerDeposit({ startPrice, rate, minimum }) {
+    if (rate !== undefined || minimum !== undefined) {
+      return Math.max(Math.round(startPrice * (rate ?? 0.1)), minimum ?? 0);
+    }
+
+    return getDepositPolicy({ startPrice }).amount;
+  }
+
+  function getDepositPolicy({ startPrice }) {
+    if (startPrice < 50000) {
+      return {
+        amount: 0,
+        required: false,
+        status: "optional",
+        verification: "standard",
+      };
+    }
+
+    if (startPrice <= 200000) {
+      return {
+        amount: 5000,
+        required: true,
+        status: "blocked",
+        verification: "standard",
+      };
+    }
+
+    return {
+      amount: Math.round(startPrice * 0.1),
+      required: true,
+      status: "blocked",
+      verification: startPrice > 1000000 ? "enhanced" : "standard",
+    };
   }
 
   function calculateCommission({ finalPrice, rate = 0.075 }) {
     return Math.round(finalPrice * rate);
+  }
+
+  function getAntiSnipingEndTime({
+    auctionEndsAt,
+    bidAt,
+    windowMinutes = 2,
+    extensionMinutes = 3,
+  }) {
+    const windowMs = windowMinutes * 60 * 1000;
+    const extensionMs = extensionMinutes * 60 * 1000;
+    const remainingMs = auctionEndsAt.getTime() - bidAt.getTime();
+
+    if (remainingMs >= 0 && remainingMs <= windowMs) {
+      return new Date(auctionEndsAt.getTime() + extensionMs);
+    }
+
+    return auctionEndsAt;
   }
 
   function canPlaceBid({ user, auction, bidAmount, depositPaid }) {
@@ -44,6 +92,8 @@
     calculateCommission,
     canPlaceBid,
     formatXaf,
+    getAntiSnipingEndTime,
+    getDepositPolicy,
     getMinimumNextBid,
   };
 })();

@@ -3,10 +3,11 @@ import { notFound } from "next/navigation";
 import { DetailRow, PageShell, SectionIntro } from "@/src/components/site-chrome";
 import { demoAuctions, getDemoAuctionById } from "@/src/lib/demo-data";
 import {
-  calculateBuyerDeposit,
   calculateCommission,
   calculateSellerPayout,
   formatXaf,
+  getAntiSnipingEndTime,
+  getDepositPolicy,
   getMinimumNextBid,
 } from "@/src/lib/marketplace-core";
 import { visualStyle } from "@/src/lib/visual-style";
@@ -43,10 +44,14 @@ export default async function AuctionDetailPage({ params }: AuctionDetailPagePro
     notFound();
   }
 
-  const deposit = calculateBuyerDeposit({ startPrice: auction.startPrice });
+  const depositPolicy = getDepositPolicy({ startPrice: auction.startPrice });
   const commission = calculateCommission({ finalPrice: auction.currentPrice });
   const payout = calculateSellerPayout({ finalPrice: auction.currentPrice });
   const nextBid = getMinimumNextBid(auction);
+  const antiSnipingExample = getAntiSnipingEndTime({
+    auctionEndsAt: new Date("2026-05-02T12:00:00.000Z"),
+    bidAt: new Date("2026-05-02T11:59:00.000Z"),
+  });
 
   return (
     <PageShell>
@@ -99,7 +104,14 @@ export default async function AuctionDetailPage({ params }: AuctionDetailPagePro
             <DetailRow label="Palier minimum" value={formatXaf(auction.increment)} />
             <DetailRow label="Prix de reserve" value={formatXaf(auction.reservePrice)} />
             <DetailRow label="Achat immediat" value={formatXaf(auction.buyNow)} />
-            <DetailRow label="Caution obligatoire" value={formatXaf(deposit)} />
+            <DetailRow
+              label={depositPolicy.required ? "Caution obligatoire" : "Caution"}
+              value={depositPolicy.amount > 0 ? formatXaf(depositPolicy.amount) : "Optionnelle"}
+            />
+            <DetailRow
+              label="Verification"
+              value={depositPolicy.verification === "enhanced" ? "Renforcee" : "Standard"}
+            />
             <div className="detail-actions">
               <Link className="security-btn" href="/connexion">
                 Payer caution
@@ -116,6 +128,7 @@ export default async function AuctionDetailPage({ params }: AuctionDetailPagePro
             <DetailRow label="Reversement vendeur estime" value={formatXaf(payout.payout)} />
             <DetailRow label="Statut paiement" value="Capture apres adjudication" />
             <DetailRow label="Liberation des fonds" value="Apres retrait confirme ou validation admin" />
+            <DetailRow label="Anti-sniping" value={`Extension exemple: ${antiSnipingExample.toISOString().slice(11, 16)}`} />
             <ol className="ops-steps detail-steps">
               <li>Caution acheteur verifiee avant participation.</li>
               <li>Paiement gagnant bloque en sequestre interne.</li>

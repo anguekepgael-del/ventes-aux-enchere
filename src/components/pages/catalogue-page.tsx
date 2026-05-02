@@ -10,6 +10,7 @@ import {
   calculateCommission,
   canPlaceBid,
   formatXaf,
+  getDepositPolicy,
   getMinimumNextBid,
 } from "@/src/lib/marketplace-core";
 
@@ -30,6 +31,7 @@ export function CataloguePage() {
       : auctions.filter((auction) => auction.category === selectedCategory);
   const selectedAuction = auctions.find((auction) => auction.id === selectedAuctionId) ?? auctions[0];
   const minimumBid = getMinimumNextBid(selectedAuction);
+  const selectedDepositPolicy = getDepositPolicy({ startPrice: selectedAuction.startPrice });
 
   function notify(message: string) {
     setToast(message);
@@ -113,7 +115,11 @@ export function CataloguePage() {
                     <span className={`badge ${auction.urgent ? "alert" : "gold"}`}>{auction.endsIn}</span>
                   </div>
                   <div className="card-footer">
-                    <small>Caution {formatXaf(calculateBuyerDeposit({ startPrice: auction.startPrice }))}</small>
+                    <small>
+                      {calculateBuyerDeposit({ startPrice: auction.startPrice }) > 0
+                        ? `Caution ${formatXaf(calculateBuyerDeposit({ startPrice: auction.startPrice }))}`
+                        : "Caution optionnelle"}
+                    </small>
                     <Link className="ghost-btn" href={`/catalogue/${auction.id}`}>
                       Detail
                     </Link>
@@ -154,8 +160,14 @@ export function CataloguePage() {
               value={
                 depositPaid
                   ? "Payee"
-                  : formatXaf(calculateBuyerDeposit({ startPrice: selectedAuction.startPrice }))
+                  : selectedDepositPolicy.amount > 0
+                    ? formatXaf(selectedDepositPolicy.amount)
+                    : "Optionnelle"
               }
+            />
+            <DetailRow
+              label="Verification"
+              value={selectedDepositPolicy.verification === "enhanced" ? "Renforcee" : "Standard"}
             />
             <DetailRow
               label="Commission estimee"
