@@ -1,13 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import type { CSSProperties, ReactNode } from "react";
-
-type VisualStyle = CSSProperties & { "--visual-bg": string };
-
-export function visualStyle(background: string): VisualStyle {
-  return { "--visual-bg": background };
-}
+import type { ReactNode } from "react";
 
 export function SiteHeader() {
   return (
